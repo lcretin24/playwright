@@ -27,7 +27,7 @@ jobs:
             - name: installer les dépendences ci - clean install 
               run: npm ci 
             - name: installer les navigateurs playwright
-              run: npm playwright install --with -deps
+              run: npx playwright install --with -deps
             - name: Déterminer le tag à utiliser
               id: tag
               run: |
