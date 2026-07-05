@@ -1,0 +1,41 @@
+name: playwright_test
+on:
+  push:
+      branches:[main]
+  pull_request:
+      branches: [main]    
+  workflow_dispatch: 
+      inputs:
+          tag:
+            description: "Tags a executer"
+            required: false
+            default: "@validation"
+            type: string
+env:
+    DEFAULT_TAG: "@validation" 
+jobs:
+    test:
+        timeout-minutes: 60
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout du code
+              uses: actions/checkout@v4
+            - name: installer node JS
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+            - name: installer les dépendences
+              run: npm clean install
+            - name: installer les navigateurs playwright
+              run: npm playwright install --with -deps
+            - name: Déterminer le tag à utiliser
+              id: tag
+              run: |
+                if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+                  echo "value=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+                else
+                  echo "value=${{ env.DEFAULT_TAG }}" >> "$GITHUB_OUTPUT"
+                fi 
+            - name: Lancer les tests Cucumber avec Playwright
+              run: npx cucumber-js --tags "${{ steps.tag.outputs.value }}"
+                  
