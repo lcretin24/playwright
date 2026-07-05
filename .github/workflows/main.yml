@@ -24,8 +24,8 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 20
-            - name: installer les dépendences
-              run: npm clean install
+            - name: installer les dépendences ci - clean install 
+              run: npm ci 
             - name: installer les navigateurs playwright
               run: npm playwright install --with -deps
             - name: Déterminer le tag à utiliser
